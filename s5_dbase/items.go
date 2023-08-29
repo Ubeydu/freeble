@@ -3,6 +3,7 @@ package s5_dbase
 import (
 	"database/sql"
 	"fmt"
+	"io"
 )
 
 func CreateItemsTable(dbase *sql.DB) error {
@@ -41,5 +42,15 @@ func AddItem(dbase *sql.DB, giver_id, item_name, description string, image []byt
 	if err != nil {
 		return fmt.Errorf("could not add %s to Database : %w", item_name, err)
 	}
+	return nil
+}
+
+func GetImage(db *sql.DB, item_id int, w io.Writer) error {
+	row := db.QueryRow(`SELECT image FROM items WHERE item_id=?;`, item_id)
+	var pic *sql.RawBytes
+	if err := row.Scan(&pic); err != nil {
+		return fmt.Errorf("could not get pic %d : %w", item_id, err)
+	}
+	w.Write(*pic)
 	return nil
 }
