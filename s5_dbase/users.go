@@ -47,7 +47,7 @@ func CheckLogin(db *sql.DB, username, password string) (bool, error) {
 	var phash []byte
 	err := row.Scan(&phash)
 	if err != nil {
-		return false, fmt.Errorf("User does not exist : %w", err)
+		return false, fmt.Errorf("user does not exist : %w", err)
 	}
 	// error is password fail
 	return bcrypt.CompareHashAndPassword(phash, []byte(password)) == nil, nil
