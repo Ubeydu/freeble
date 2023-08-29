@@ -4,9 +4,8 @@ import "database/sql"
 
 func CreateUsersTable(dbase *sql.DB) error {
 	userStmt, err := dbase.Prepare(`
-		CREATE TABLE users(
-			"uid" integer NOT NULL PRIMARY KEY AUTOINCREMENT,
-			"user_name" text,
+		CREATE TABLE users(			
+			"user_name" text NOT NULL PRIMARY KEY,
 			"pass_hash" text
  		);
 	`)

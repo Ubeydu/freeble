@@ -7,10 +7,12 @@ func CreateItemsTable(dbase *sql.DB) error {
 		CREATE TABLE items(
 			"item_id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,
 			"giver_id" integer NOT NULL,
-			"receiver_id" integer,
+			"receiver_id" text,
 			"name" text,
 			"description" text,
-			"image" blob
+			"image" blob,
+			FOREIGN KEY (giver_id) REFERENCES users (user_name),
+			FOREIGN KEY (receiver_id) REFERENCES users (user_name)
  		);
 	`)
 	if err != nil {
