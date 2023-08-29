@@ -38,7 +38,7 @@ func main() {
 		if err != nil {
 			log.Fatal(err.Error())
 		}
-		fmt.Printf("User Added :  %s", os.Args[2])
+		fmt.Printf("User Added :  %s\n", os.Args[2])
 	case "login":
 		if len(os.Args) < 4 {
 			log.Fatal("login <username> <password>")
@@ -48,6 +48,19 @@ func main() {
 			log.Fatal(err.Error())
 		}
 		fmt.Printf("Login = %t\n", n)
+	case "add_item":
+		if len(os.Args) < 6 {
+			log.Fatal("add_item <giver_id> <item_name> <description> <image_location>")
+		}
+		fdata, err := os.ReadFile(os.Args[5])
+		if err != nil {
+			log.Fatalf("Read Image Error : %w", err)
+		}
+		err = s5_dbase.AddItem(db, os.Args[2], os.Args[3], os.Args[4], fdata)
+		if err != nil {
+			log.Fatalf("Could not add Item: %w", err)
+		}
+		fmt.Printf("Item Added : %s\n", os.Args[3])
 	default:
 		fmt.Printf("TODO: Help Info ...")
 	}
