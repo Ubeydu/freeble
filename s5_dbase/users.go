@@ -41,3 +41,14 @@ func AddUser(db *sql.DB, username, pass string) error {
 	}
 	return nil
 }
+
+func CheckLogin(db *sql.DB, username, password string) (bool, error) {
+	row := db.QueryRow(`SELECT pass_hash FROM users WHERE user_name=?`, username)
+	var phash []byte
+	err := row.Scan(&phash)
+	if err != nil {
+		return false, fmt.Errorf("User does not exist : %w", err)
+	}
+	// error is password fail
+	return bcrypt.CompareHashAndPassword(phash, []byte(password)) == nil, nil
+}
