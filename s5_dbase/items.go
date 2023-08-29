@@ -54,3 +54,32 @@ func GetImage(db *sql.DB, item_id int, w io.Writer) error {
 	w.Write(*pic)
 	return nil
 }
+
+type ItemInfo struct {
+	item_id     int
+	giver_id    string
+	name        string
+	description string
+}
+
+func SearchItems(dbase *sql.DB, info string) ([]ItemInfo, error) {
+	nm := fmt.Sprintf("%%%s%%", info)
+	rows, err := dbase.Query("Select item_id, giver_id, name, description FROM items WHERE description LIKE ? OR name LIKE ?", nm, nm)
+	res := []ItemInfo{}
+	if err != nil {
+		return res, fmt.Errorf("Could not read Items : %w", err)
+	}
+	for rows.Next() {
+		var (
+			item_id     int
+			giver_id    string
+			name        string
+			description string
+		)
+		if err = rows.Scan(&item_id, &giver_id, &name, &description); err != nil {
+			return res, fmt.Errorf("Could not read ROW : %w", err)
+		}
+		res = append(res, ItemInfo{item_id: item_id, giver_id: giver_id, name: name, description: description})
+	}
+	return res, nil
+}

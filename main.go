@@ -74,6 +74,17 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
+	case "search_items":
+		if len(os.Args) < 3 {
+			log.Fatal("search_items <search term>")
+		}
+		list, err := s5_dbase.SearchItems(db, os.Args[2])
+		if err != nil {
+			log.Fatalf("could not find items for %s : %w", os.Args[2], err)
+		}
+		for k, v := range list {
+			fmt.Printf("Item %d = %v\n", k, v)
+		}
 	default:
 		fmt.Printf("TODO: Help Info ...")
 	}
