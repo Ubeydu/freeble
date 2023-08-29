@@ -85,6 +85,18 @@ func main() {
 		for k, v := range list {
 			fmt.Printf("Item %d = %v\n", k, v)
 		}
+	case "set_receiver":
+		if len(os.Args) < 4 {
+			log.Fatal("set_receiver <item_id> <receiver_id>")
+		}
+		i_id, err := strconv.Atoi(os.Args[2])
+		if err != nil {
+			log.Fatal("item_id should be int")
+		}
+		if err = s5_dbase.SetReceiver(db, i_id, os.Args[3]); err != nil {
+			log.Fatal("Could not set receiver %w", err)
+		}
+		println("receiver set")
 	default:
 		fmt.Printf("TODO: Help Info ...")
 	}

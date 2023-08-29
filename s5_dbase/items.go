@@ -83,3 +83,15 @@ func SearchItems(dbase *sql.DB, info string) ([]ItemInfo, error) {
 	}
 	return res, nil
 }
+
+func SetReceiver(db *sql.DB, item_id int, receiver_id string) error {
+	stmt, err := db.Prepare(`UPDATE items SET receiver_id = ? WHERE item_id = ?;`)
+	if err != nil {
+		return fmt.Errorf("Statement Bad %w", err)
+	}
+	_, err = stmt.Exec(receiver_id, item_id)
+	if err != nil {
+		return fmt.Errorf("Could not set receiver: %w", err)
+	}
+	return nil
+}
