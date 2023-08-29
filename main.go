@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 
 	s5_dbase "example.com/hello"
 )
@@ -61,6 +62,18 @@ func main() {
 			log.Fatalf("Could not add Item: %w", err)
 		}
 		fmt.Printf("Item Added : %s\n", os.Args[3])
+	case "get_image":
+		if len(os.Args) < 3 {
+			log.Fatal("get_image <image_id>")
+		}
+		item_id, err := strconv.Atoi(os.Args[2])
+		if err != nil {
+			log.Fatal("image_id should be int")
+		}
+		err = s5_dbase.GetImage(db, item_id, os.Stdout)
+		if err != nil {
+			log.Fatal(err)
+		}
 	default:
 		fmt.Printf("TODO: Help Info ...")
 	}
